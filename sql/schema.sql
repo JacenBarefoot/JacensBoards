@@ -1,0 +1,21 @@
+DROP TABLE CUSTOMERS, SKATEBOARDS, ORDERS;
+
+CREATE TABLE CUSTOMERS(
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    phone bigint NOT NULL,
+    address TEXT NOT NULL
+);
+
+CREATE TABLE SKATEBOARDS(
+    id BIGSERIAL PRIMARY KEY,
+    boardColor TEXT NOT NULL,
+    boardSize int NOT NULL,
+    gripTape boolean NOT NULL,
+    wheelSize int NOT NULL
+);
+
+CREATE TABLE ORDERS(
+    id BIGSERIAL PRIMARY KEY,
+
+);
