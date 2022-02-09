@@ -1,133 +1,126 @@
 package com.company;
-import java.sql.*;
 import java.util.*;
+import java.sql.*;
 
 public class Main {
-    private String name;
-    private String type;
-    private Integer hp;
-    private String description;
-
-    Main(String name, String type, Integer hp, String description) {
-        this.name = name;
-        this.type = type;
-        this.hp = hp;
-        this.description = description;
-    }
-
-    public String getPokeName() {
-        return name;
-    }
-
-    public String toString() {
-        return name + " - " + type + " - " + hp + " - " + description;
-    }
-
     public static void main(String[] args) {
-        List<Main> c = new ArrayList<Main>();
-        Scanner s = new Scanner(System.in);
-        Scanner s1 = new Scanner(System.in);
-        Scanner myObj = new Scanner(System.in);
-        String action = "Hello World";
-        do {
-            System.out.println("[create] pokemon, view pokemon[name], view [all] pokemon, [update] pokemon, [delete] pokemon, or [quit]?");
-            action = myObj.nextLine();
+        String action = "let's get this working";
+        Scanner string = new Scanner(System.in);
+        System.out.println("Hello there!");
+        System.out.println("Welcome to JacensSkateboards!");
+        System.out.println("What would you like to do?");
+        while (!action.equals("quit")) {
+            System.out.println("You can [create account], [browse] shop, [create skateboard], [order], or [quit]");
+            action = string.nextLine();
             switch (action) {
-                case "create":
-                    System.out.print("Name: ");
-                    String pokeName = s1.nextLine();
-                    System.out.print("Type: ");
-                    String pokeType = s1.nextLine();
-                    System.out.print("HP: ");
-                    Integer pokeHp = s.nextInt();
-                    System.out.print("Description: ");
-                    String pokeDescription = s1.nextLine();
-                    c.add(new Main(pokeName, pokeType, pokeHp, pokeDescription));
-                    System.out.println(c);
+                case "create account":
+                    createAccount();
                     break;
-                case "name":
-                    boolean found = false;
-                    System.out.println("Enter a Pokemon's name:");
-                    String pokName = s1.nextLine();
-                    System.out.println("----------------------");
-                    Iterator<Main> i = c.iterator();
-                    while (i.hasNext()) {
-                        Main e = i.next();
-                        if (e.getPokeName().equals(pokName)) {
-                            System.out.println(e);
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        System.out.println("Pokemon not found");
-                    }
-
-                    System.out.println("----------------------");
+                case "browse":
+                    browse();
                     break;
-                case "all":
-                    boolean founds = false;
-                    System.out.println("----------------------");
-                    Iterator<Main> lil = c.iterator();
-                    while (lil.hasNext()) {
-                        Main e = lil.next();
-                        System.out.println(e);
-                        founds = true;
-                    }
-                    break;
-                case "update":
-                    found = false;
-                    System.out.println("Enter a Pokemon's name to update :");
-                    pokName = s1.nextLine();
-                    System.out.println("----------------------");
-                    ListIterator<Main>li = c.listIterator();
-                    while (li.hasNext()) {
-                        Main e = li.next();
-                        if (e.getPokeName().equals(pokName)) {
-                            System.out.println("Enter a new name for this Pokemon :");
-                            pokeName = s1.nextLine();
-                            System.out.println("Enter a new type for this Pokemon :");
-                            pokeType = s1.nextLine();
-                            System.out.println("Enter a new hp for this Pokemon :");
-                            pokeHp = s.nextInt();
-                            System.out.println("Enter a new description for this Pokemon :");
-                            pokeDescription = s1.nextLine();
-                            li.set(new Main(pokeName, pokeType, pokeHp, pokeDescription));
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        System.out.println("Pokemon not found");
-                    }else{
-                        System.out.println("Pokemon deleted successfully!");
-                    }
-                    System.out.println("----------------------");
-                    break;
-                case "delete":
-                    found = false;
-                    System.out.println("Enter a Pokemon's name to delete :");
-                    pokName = s1.nextLine();
-                    System.out.println("----------------------");
-                    i = c.iterator();
-                    while (i.hasNext()) {
-                        Main e = i.next();
-                        if (e.getPokeName().equals(pokName)) {
-                            i.remove();
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        System.out.println("Pokemon not found");
-                    }else{
-                        System.out.println("Pokemon deleted successfully!");
-                    }
-                    System.out.println("----------------------");
+                case "create skateboard":
+                    createSkateboard();
                     break;
                 case "quit":
                     break;
-                default:
-                    System.out.println("This is not a valid action!!!!!");
-                    break;
             }
-        } while (!action.equals("quit"));
+        }
+    }
+    public static void createAccount() {
+        Scanner input = new Scanner(System.in);
+        Scanner numb = new Scanner(System.in);
+        System.out.print("Name: ");
+        String name = input.nextLine();
+        System.out.print("Email: ");
+        String email = input.nextLine();
+        System.out.print("Phone number: ");
+        Long phoneNumber = numb.nextLong();
+        System.out.print("Address: ");
+        String address = input.nextLine();
+        try (
+                Connection connection = DriverManager.getConnection("jdbc:postgresql:Skateboards");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO CUSTOMERS (name, email, phone, address) VALUES (?, ?, ?, ?)")
+        ) {
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            stmt.setLong(3, phoneNumber);
+            stmt.setString(4, address);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("---Account added successfully---");
+    }
+    public static void createSkateboard() {
+        Scanner input = new Scanner(System.in);
+        Scanner numb = new Scanner(System.in);
+        System.out.print("Board Brand: ");
+        String boardBrand = input.nextLine();
+        System.out.print("Board Size: ");
+        Float boardSize = numb.nextFloat();
+        System.out.print("Wheel Size: ");
+        int wheelSize = numb.nextInt();
+        System.out.print("Wheel Color: ");
+        String wheelColor = input.nextLine();
+        try (
+                Connection connection = DriverManager.getConnection("jdbc:postgresql:Skateboards");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO BOARDS (boardBrand, boardSize, wheelSize, wheelColor) VALUES (?, ?, ?, ?)")
+        ) {
+            stmt.setString(1, boardBrand);
+            stmt.setFloat(2, boardSize);
+            stmt.setInt(3, wheelSize);
+            stmt.setString(4, wheelColor);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void browse() {
+        Scanner string = new Scanner(System.in);
+        System.out.println("What would you like to browse? [Boards], [Shoes], or [Backpacks]");
+        String action = string.nextLine();
+        switch(action) {
+            case "Boards":
+                try {
+                    Connection connection = DriverManager.getConnection("jdbc:postgresql:Skateboards");
+                    Statement st = connection.createStatement();
+                    ResultSet rs = st.executeQuery("SELECT * FROM BOARDS");
+                    while (rs.next())
+                    {
+                        System.out.print(rs.getInt("id") + "." + "Brand name: " + rs.getString("boardBrand") + " |");
+                        System.out.print(" Board Size: " + rs.getString("boardSize") + " |");
+                        System.out.print(" Wheel Size: " + rs.getString("wheelSize") + " |");
+                        System.out.println(" Wheel Color: " + rs.getString("wheelColor"));
+                        System.out.println("------------------------------------------------------------------------------------");
+                    }
+                    rs.close();
+                    st.close();
+                } catch(SQLException e){
+                        e.printStackTrace();
+                }
+            case "Shoes":
+                try {
+                    Connection connection = DriverManager.getConnection("jdbc:postgresql:Skateboards");
+                    Statement st = connection.createStatement();
+                    ResultSet rs = st.executeQuery("SELECT * FROM SHOES");
+                    while (rs.next())
+                    {
+                        System.out.print(rs.getInt("id") + "." + "Brand name: " + rs.getString("shoeBrand") + " |");
+                        System.out.print(" Shoe Type: " + rs.getString("shoeType") + " |");
+                        System.out.print(" Shoe Size: " + rs.getString("shoeSize") + " |");
+                        System.out.println(" Shoe Color: " + rs.getString("shoeColor"));
+                        System.out.println("------------------------------------------------------------------------------------");
+                    }
+                    rs.close();
+                    st.close();
+                } catch(SQLException e){
+                    e.printStackTrace();
+                }
+
+        }
     }
 }
+// Make sure to create the backpack table in schema
+// Make sure to make the order system, adding lists to an Order ArrayList
+// Maybe custom shoes
